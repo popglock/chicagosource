@@ -1,0 +1,283 @@
+--made by leojeb
+
+-- Instances:
+
+local ScreenGui = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local title = Instance.new("TextLabel")
+local fly = Instance.new("TextButton")
+local Aimbot = Instance.new("TextButton")
+local Esp = Instance.new("TextButton")
+local bank = Instance.new("TextButton")
+local close = Instance.new("TextButton")
+
+--Properties:
+
+ScreenGui.Parent = game.CoreGui
+
+Main.Name = "Main"
+Main.Parent = ScreenGui
+Main.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+Main.Position = UDim2.new(0.3484236, 0, 0.277495801, 0)
+Main.Size = UDim2.new(0, 462, 0, 262)
+Main.Draggable = true
+
+title.Name = "title"
+title.Parent = Main
+title.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+title.BackgroundTransparency = 100.000
+title.Position = UDim2.new(0.0173160173, 0, 0, 0)
+title.Size = UDim2.new(0, 87, 0, 23)
+title.Font = Enum.Font.SourceSans
+title.Text = "Chicago Remastred"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 14.000
+
+fly.Name = "fly"
+fly.Parent = Main
+fly.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+fly.Position = UDim2.new(0.396103889, 0, 0.587786257, 0)
+fly.Size = UDim2.new(0, 95, 0, 31)
+fly.Font = Enum.Font.SourceSans
+fly.Text = "Fly"
+fly.TextColor3 = Color3.fromRGB(0, 0, 0)
+fly.TextSize = 14.000
+fly.MouseButton1Down:connect(function()
+	repeat wait() 
+	until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:findFirstChild("Head") and game.Players.LocalPlayer.Character:findFirstChild("Humanoid") 
+	local mouse = game.Players.LocalPlayer:GetMouse() 
+	repeat wait() until mouse
+	local plr = game.Players.LocalPlayer 
+	local torso = plr.Character.Head 
+	local flying = false
+	local deb = true 
+	local ctrl = {f = 0, b = 0, l = 0, r = 0} 
+	local lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+	local maxspeed = 400 
+	local speed = 5000 
+
+	function Fly() 
+		local bg = Instance.new("BodyGyro", torso) 
+		bg.P = 9e4 
+		bg.maxTorque = Vector3.new(9e9, 9e9, 9e9) 
+		bg.cframe = torso.CFrame 
+		local bv = Instance.new("BodyVelocity", torso) 
+		bv.velocity = Vector3.new(0,0.1,0) 
+		bv.maxForce = Vector3.new(9e9, 9e9, 9e9) 
+		repeat wait() 
+			plr.Character.Humanoid.PlatformStand = true 
+			if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then 
+				speed = speed+.5+(speed/maxspeed) 
+				if speed > maxspeed then 
+					speed = maxspeed 
+				end 
+			elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then 
+				speed = speed-1 
+				if speed < 0 then 
+					speed = 0 
+				end 
+			end 
+			if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then 
+				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+				lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r} 
+			elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then 
+				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+			else 
+				bv.velocity = Vector3.new(0,0.1,0) 
+			end 
+			bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0) 
+		until not flying 
+		ctrl = {f = 0, b = 0, l = 0, r = 0} 
+		lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+		speed = 0 
+		bg:Destroy() 
+		bv:Destroy() 
+		plr.Character.Humanoid.PlatformStand = false 
+	end 
+	mouse.KeyDown:connect(function(key) 
+		if key:lower() == "e" then 
+			if flying then flying = false 
+			else 
+				flying = true 
+				Fly() 
+			end 
+		elseif key:lower() == "w" then 
+			ctrl.f = 1 
+		elseif key:lower() == "s" then 
+			ctrl.b = -1 
+		elseif key:lower() == "a" then 
+			ctrl.l = -1 
+		elseif key:lower() == "d" then 
+			ctrl.r = 1 
+		end 
+	end) 
+	mouse.KeyUp:connect(function(key) 
+		if key:lower() == "w" then 
+			ctrl.f = 0 
+		elseif key:lower() == "s" then 
+			ctrl.b = 0 
+		elseif key:lower() == "a" then 
+			ctrl.l = 0 
+		elseif key:lower() == "d" then 
+			ctrl.r = 0 
+		end 
+	end)
+	Fly()
+end)
+	
+Aimbot.Name = "Aimbot"
+Aimbot.Parent = Main
+Aimbot.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+Aimbot.Position = UDim2.new(0.396103889, 0, 0.351145029, 0)
+Aimbot.Size = UDim2.new(0, 95, 0, 36)
+Aimbot.Font = Enum.Font.SourceSans
+Aimbot.Text = "Aimbot"
+Aimbot.TextColor3 = Color3.fromRGB(0, 0, 0)
+Aimbot.TextSize = 14.000
+Aimbot.MouseButton1Down:connect(function()
+	local dwCamera = workspace.CurrentCamera
+	local dwRunService = game:GetService("RunService")
+	local dwUIS = game:GetService("UserInputService")
+	local dwEntities = game:GetService("Players")
+	local dwLocalPlayer = dwEntities.LocalPlayer
+	local dwMouse = dwLocalPlayer:GetMouse()
+
+	local settings = {
+		Aimbot = true,
+		Aiming = false,
+		Aimbot_AimPart = "Head",
+		Aimbot_TeamCheck = true,
+		Aimbot_Draw_FOV = true,
+		Aimbot_FOV_Radius = 200,
+		Aimbot_FOV_Color = Color3.fromRGB(255,255,255)
+	}
+
+	local fovcircle = Drawing.new("Circle")
+	fovcircle.Visible = settings.Aimbot_Draw_FOV
+	fovcircle.Radius = settings.Aimbot_FOV_Radius
+	fovcircle.Color = settings.Aimbot_FOV_Color
+	fovcircle.Thickness = 1
+	fovcircle.Filled = false
+	fovcircle.Transparency = 1
+
+	fovcircle.Position = Vector2.new(dwCamera.ViewportSize.X / 2, dwCamera.ViewportSize.Y / 2)
+
+	dwUIS.InputBegan:Connect(function(i)
+		if i.UserInputType == Enum.UserInputType.MouseButton2 then
+			settings.Aiming = true
+		end
+	end)
+
+	dwUIS.InputEnded:Connect(function(i)
+		if i.UserInputType == Enum.UserInputType.MouseButton2 then
+			settings.Aiming = false
+		end
+	end)
+
+	dwRunService.RenderStepped:Connect(function()
+
+		local dist = math.huge
+		local closest_char = nil
+
+		if settings.Aiming then
+
+			for i,v in next, dwEntities:GetChildren() do 
+
+				if v ~= dwLocalPlayer and
+					v.Character and
+					v.Character:FindFirstChild("HumanoidRootPart") and
+					v.Character:FindFirstChild("Humanoid") and
+					v.Character:FindFirstChild("Humanoid").Health > 0 then
+
+					if settings.Aimbot_TeamCheck == true and
+						v.Team ~= dwLocalPlayer.Team or
+						settings.Aimbot_TeamCheck == false then
+
+						local char = v.Character
+						local char_part_pos, is_onscreen = dwCamera:WorldToViewportPoint(char[settings.Aimbot_AimPart].Position)
+
+						if is_onscreen then
+
+							local mag = (Vector2.new(dwMouse.X, dwMouse.Y) - Vector2.new(char_part_pos.X, char_part_pos.Y)).Magnitude
+
+							if mag < dist and mag < settings.Aimbot_FOV_Radius then
+
+								dist = mag
+								closest_char = char
+
+							end
+						end
+					end
+				end
+			end
+
+			if closest_char ~= nil and
+				closest_char:FindFirstChild("HumanoidRootPart") and
+				closest_char:FindFirstChild("Humanoid") and
+				closest_char:FindFirstChild("Humanoid").Health > 0 then
+
+				dwCamera.CFrame = CFrame.new(dwCamera.CFrame.Position, closest_char[settings.Aimbot_AimPart].Position)
+			end
+		end
+	end)
+end)
+
+Esp.Name = "Esp"
+Esp.Parent = Main
+Esp.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+Esp.Position = UDim2.new(0.396103919, 0, 0.782442749, 0)
+Esp.Size = UDim2.new(0, 95, 0, 39)
+Esp.Font = Enum.Font.SourceSans
+Esp.Text = "Esp"
+Esp.TextColor3 = Color3.fromRGB(0, 0, 0)
+Esp.TextSize = 14.000
+Esp.MouseButton1Down:connect(function()
+	local esp_settings = { ---- table for esp settings 
+		textsize = 8,
+		colour = 255,255,255
+	}
+
+	local gui = Instance.new("BillboardGui")
+	local esp = Instance.new("TextLabel",gui) ---- new instances to make the billboard gui and the textlabel
+
+
+
+	gui.Name = "Cracked esp"; ---- properties of the esp
+	gui.ResetOnSpawn = false
+	gui.AlwaysOnTop = true;
+	gui.LightInfluence = 0;
+	gui.Size = UDim2.new(1.75, 0, 1.75, 0);
+	esp.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+	esp.Text = ""
+	esp.Size = UDim2.new(0.0001, 0.00001, 0.0001, 0.00001);
+	esp.BorderSizePixel = 4;
+	esp.BorderColor3 = Color3.new(esp_settings.colour)
+	esp.BorderSizePixel = 0
+	esp.Font = "GothamSemibold"
+	esp.TextSize = esp_settings.textsize
+	esp.TextColor3 = Color3.fromRGB(esp_settings.colour) -- text colour
+
+	game:GetService("RunService").RenderStepped:Connect(function() ---- loops faster than a while loop :)
+		for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+			if v ~= game:GetService("Players").LocalPlayer and v.Character.Head:FindFirstChild("Cracked esp")==nil  then -- craeting checks for team check, local player etc
+				esp.Text = "{"..v.Name.."}"
+				gui:Clone().Parent = v.Character.Head
+			end
+		end
+	end)
+end)
+
+close.Name = "close"
+close.Parent = Main
+close.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+close.Position = UDim2.new(0.941558421, 0, 0, 0)
+close.Size = UDim2.new(0, 27, 0, 35)
+close.Font = Enum.Font.SourceSans
+close.Text = "X"
+close.TextColor3 = Color3.fromRGB(255, 255, 255)
+close.TextScaled = true
+close.TextSize = 14.000
+close.TextWrapped = true
+close.MouseButton1Down:connect(function()
+	Main.Visible = false
+end)
